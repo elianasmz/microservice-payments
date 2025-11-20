@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,23 +28,23 @@ public class InvoiceService {
         this.invoiceRepository = invoiceRepository;
         this.modelMapper = modelMapper;
     }
-
+    @Transactional
     public InvoiceResponseDTO createInvoice(InvoiceRequestDTO invoiceRequestDTO) {
         log.info("Creating new invoice for reservation: {}", invoiceRequestDTO.getReservationId());
 
-        Invoice invoice = modelMapper.map(invoiceRequestDTO, Invoice.class);
-
-        // Set reservation
-        Reservation reservation = new Reservation();
-        reservation.setId(invoiceRequestDTO.getReservationId().longValue());
-        invoice.setReservation(reservation);
-
+        Invoice invoice = new Invoice();
+        invoice.setReservation(new Reservation());
+        invoice.getReservation().setId(invoiceRequestDTO.getReservationId().longValue());
+        invoice.setTotalAmount(BigDecimal.valueOf(invoiceRequestDTO.getTotalAmount()));
+        invoice.setIssueDate(LocalDateTime.now());
         invoice.setActive(true);
+
         Invoice savedInvoice = invoiceRepository.save(invoice);
 
         log.info("Invoice created successfully with ID: {}", savedInvoice.getId());
         return modelMapper.map(savedInvoice, InvoiceResponseDTO.class);
     }
+
 
     public InvoiceResponseDTO updateInvoice(Long id, InvoiceRequestDTO invoiceRequestDTO) {
         log.info("Updating invoice with ID: {}", id);

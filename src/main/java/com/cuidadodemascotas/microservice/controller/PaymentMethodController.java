@@ -3,6 +3,9 @@ package com.cuidadodemascotas.microservice.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.example.cuidadodemascota.commons.dto.*;
 import com.cuidadodemascotas.microservice.service.PaymentMethodService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,9 +16,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import java.util.List;
+
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/payment-methods")
+@RequestMapping("/payment-methods")
 @Tag(name = "Payment Methods", description = "Operaciones relacionadas con los métodos de pago")
 public class PaymentMethodController {
 
@@ -79,5 +84,19 @@ public class PaymentMethodController {
         paymentMethodService.deletePaymentMethod(id);
         return ResponseEntity.noContent().build();
     }
+
+    // Listar todos los métodos de pago
+    @Operation(summary = "Listar métodos de pago", description = "Obtiene todos los métodos de pago del sistema con paginación")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de métodos de pago obtenida exitosamente")
+    })
+//@PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/all")
+    public ResponseEntity<List<PaymentMethodResponseDTO>> getAllPaymentMethods() {
+        List<PaymentMethodResponseDTO> methods = paymentMethodService.getAllPaymentMethods();
+        return ResponseEntity.ok(methods);
+    }
+
+
 }
 

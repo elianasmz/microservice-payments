@@ -19,7 +19,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/payment-details")
+@RequestMapping("/payment-details")
 @Tag(name = "Payment Details", description = "Operaciones relacionadas con los detalles de pago")
 public class PaymentDetailController {
 

@@ -6,6 +6,7 @@ import org.example.cuidadodemascota.commons.entities.invoice.PaymentMethod;
 import com.cuidadodemascotas.microservice.repository.PaymentMethodRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -91,4 +92,21 @@ public class PaymentMethodService {
 
         return result;
     }
+
+    /**
+     * Obtener todos los métodos de pago con paginación
+     */
+    @Transactional(readOnly = true)
+    public List<PaymentMethodResponseDTO> getAllPaymentMethods() {
+        log.debug("Fetching all payment methods");
+
+        List<PaymentMethod> methods = paymentMethodRepository.findAll();
+
+        return methods.stream()
+                .map(method -> modelMapper.map(method, PaymentMethodResponseDTO.class))
+                .collect(Collectors.toList());
+    }
+
+
+
 }

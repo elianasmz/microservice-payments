@@ -11,6 +11,7 @@
     <groupId>com.cuidadodemascotas</groupId>
     <artifactId>microservice</artifactId>
     <version>1.0.0</version>
+    <packaging>war</packaging>
     <name>microservice</name>
     <description>Demo project for Spring Boot</description>
     <url/>
